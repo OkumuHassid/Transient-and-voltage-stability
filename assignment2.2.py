@@ -200,3 +200,32 @@ for i in range(3):
     Ps_max = Es_values[i]**2 * np.cos(np.deg2rad(85)) + Es_values[i] * Er_values[i]
 
     print(f"Es = {Es_values[i]}, Er = {Er_values[i]}: Ps,max = {Ps_max} pu")
+
+# plot the P-delta curves of the three cases
+# Ps = Es^2*cos(theta)/Z - Es*Er*cos(theta + delta)/Z, where Z and theta are the magnitude and angle of the line impedance
+Z = np.abs(Z_line)
+theta = np.angle(Z_line)
+Ps = 1
+delta = np.deg2rad(np.linspace(0, 180, 1000))
+
+plt.figure(figsize = (6,4))
+
+for i in range(3):
+    Es, Er = Es_values[i], Er_values[i]
+    P_delta = Es**2 * np.cos(theta) / Z - Es * Er * np.cos(theta + delta) / Z
+    plt.plot(np.rad2deg(delta), P_delta, color = colors[i], label = f"Es = {Es} pu, Er = {Er} pu")
+
+    # mark the intersection with Ps = 1 pu on the rising side of the curve (the solution found by the power flow)
+    # the curve counts as reaching Ps if Ps,max is within the power flow tolerance of Ps
+    Ps_max = Es**2 * np.cos(theta) / Z + Es * Er / Z
+    if Ps_max >= Ps - err_tol:
+        delta_op = np.arccos(np.clip((Es**2 * np.cos(theta) - Ps * Z) / (Es * Er), -1, 1)) - theta
+        plt.plot(np.rad2deg(delta_op), Ps, "o", color = "red")
+
+# plot the value of Ps as a horizontal line
+plt.axhline(Ps, color = "red", linestyle = "--", label = "Ps = 1 pu")
+plt.xlabel(r"Power angle, $\delta$ [degrees]")
+plt.ylabel("Active power, Ps [pu]")
+plt.grid(True)
+plt.legend(fontsize = 8)
+plt.savefig("P_delta_curves_q2_2.png", dpi = 300)
