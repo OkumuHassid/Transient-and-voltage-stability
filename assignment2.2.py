@@ -210,20 +210,33 @@ delta = np.deg2rad(np.linspace(0, 180, 1000))
 
 plt.figure(figsize = (6,4))
 
+# positions of the Ps,max labels on the figure (delta in degrees, Ps in pu), spread out since all peaks are at the same delta
+text_pos = [(118, 1.10), (60, 1.07), (95, 0.80)]
+text_ha = ["left", "right", "center"]
+
 for i in range(3):
     Es, Er = Es_values[i], Er_values[i]
     P_delta = Es**2 * np.cos(theta) / Z - Es * Er * np.cos(theta + delta) / Z
+    Ps_max = Es**2 * np.cos(theta) / Z + Es * Er / Z
     plt.plot(np.rad2deg(delta), P_delta, color = colors[i], label = f"Es = {Es} pu, Er = {Er} pu")
 
     # mark the intersection with Ps = 1 pu on the rising side of the curve (the solution found by the power flow)
     # the curve counts as reaching Ps if Ps,max is within the power flow tolerance of Ps
-    Ps_max = Es**2 * np.cos(theta) / Z + Es * Er / Z
     if Ps_max >= Ps - err_tol:
         delta_op = np.arccos(np.clip((Es**2 * np.cos(theta) - Ps * Z) / (Es * Er), -1, 1)) - theta
         plt.plot(np.rad2deg(delta_op), Ps, "o", color = "red")
 
+    # mark Ps,max at the top of the curve, where theta + delta = 180 degrees, and label it with an arrow
+    delta_max = np.rad2deg(np.pi - theta)
+    plt.plot(delta_max, Ps_max, "x", color = colors[i])
+    plt.annotate(f"$P_{{s,max}}$ = {Ps_max:.4f} pu", (delta_max, Ps_max), xytext = text_pos[i],
+                 ha = text_ha[i], va = "center", fontsize = 8, color = colors[i],
+                 bbox = dict(fc = "white", ec = "none", pad = 0.5),
+                 arrowprops = dict(arrowstyle = "->", color = colors[i]))
+
 # plot the value of Ps as a horizontal line
 plt.axhline(Ps, color = "red", linestyle = "--", label = "Ps = 1 pu")
+
 plt.xlabel(r"Power angle, $\delta$ [degrees]")
 plt.ylabel(r"Active power, $P_s$ [pu]")
 plt.grid(True)
