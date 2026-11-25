@@ -116,7 +116,7 @@ plt.ylabel("Voltage, V [pu]")
 plt.grid(True)
 plt.legend(fontsize = 8)
 plt.savefig("PV_curves.png", dpi = 300)
-plt.show()
+# plt.show()
 
 # Q2.2.3 the load that did not converge is P = 1 pu and Q = 0.15 pu
 # it can be supplied if Pmax >= P, which is E^4/4 - X^2*P^2 - E^2*X*Q >= 0
@@ -136,10 +136,10 @@ print(f"E must be at least {E_needed} pu")
 print(f"X must be at most {X_needed} pu")
 print(f"Q must be at most {Q_needed} pu, so at least {Q_load - Q_needed} pu of reactive power compensation is needed\n")
 
-# define the three measures to test, increase E to 1.1, decrease X to 0.4, and compensation so the net Q is -0.15
+# define the three measures to test, increase E to 1.1, decrease X to 0.4, and compensation 0.2 so the net Q is -0.05
 E_measures = [1.1, 1, 1]
 X_measures = [0.5, 0.4, 0.5]
-Q_measures = [0.15, 0.15, -0.15]
+Q_measures = [0.15, 0.15, -0.05]
 
 # for loop to run the power flow with each of the measures
 for i in range(3):
