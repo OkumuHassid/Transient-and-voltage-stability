@@ -225,7 +225,7 @@ for i in range(3):
 # plot the value of Ps as a horizontal line
 plt.axhline(Ps, color = "red", linestyle = "--", label = "Ps = 1 pu")
 plt.xlabel(r"Power angle, $\delta$ [degrees]")
-plt.ylabel("Active power, Ps [pu]")
+plt.ylabel(r"Active power, $P_s$ [pu]")
 plt.grid(True)
 plt.legend(fontsize = 8)
 plt.savefig("P_delta_curves_q2_2.png", dpi = 300)
