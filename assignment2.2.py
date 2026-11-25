@@ -96,13 +96,26 @@ for i in range(3):
     plt.plot(P, V_upper, color = colors[i], label = f"Q = {Q_cases[i]} pu")
     plt.plot(P, V_lower, color = colors[i])
 
+# plot the locus of critical points, the nose (Pmax, Vcr) of the P-V curve for a range of load angles
+phi_locus = np.deg2rad(np.linspace(-15, 89, 500))
+P_locus = E**2 * (1 - np.sin(phi_locus)) / (2 * X * np.cos(phi_locus))
+V_locus = E / np.sqrt(2 * (1 + np.sin(phi_locus)))
+plt.plot(P_locus, V_locus, color = "black", linestyle = ":", label = "Locus of critical points")
+
 # plot the value of P as a vertical line
 plt.axvline(P_load, color = "red", linestyle = "--", label = "P = 1 pu")
+
+# mark the operating point (upper solution) at P = 1 pu for Q = -0.15 pu and Q = 0 pu
+for Q_op in Q_cases[:2]:
+    V_op = np.sqrt(-X * Q_op + E**2 / 2 + np.sqrt(max(E**4 / 4 - X**2 * P_load**2 - E**2 * X * Q_op, 0)))
+    plt.plot(P_load, V_op, "o", color = "red")
+
 plt.xlabel("Active power, P [pu]")
 plt.ylabel("Voltage, V [pu]")
-plt.title("PV curves for the three loads")
+# plt.title("PV curves for the three loads")
 plt.grid(True)
-plt.legend()
+plt.legend(fontsize = 8)
+plt.savefig("PV_curves.png", dpi = 300)
 plt.show()
 
 # Q2.2.3 the load that did not converge is P = 1 pu and Q = 0.15 pu
