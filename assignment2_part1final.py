@@ -30,13 +30,13 @@ delta0 = np.angle(E_p)                  # [rad]
 Pm = (E_t * np.conj(I)).real            # mechanical power = Pe pre-fault
 
 # =====================================================================
-# Helper functions (used for 1.2.2-1.3.3)
+# Helper functions 
 # =====================================================================
 def transfer_reactances(Xa):
     """Transfer reactance pre / during / post fault for a source behind Xa."""
-    X_pre = Xa + X_line                              # both lines in service
-    X_dur = Xa + X_1 + Xa * X_1 / (X_21 + X_22)      # star-delta, fault at B9
-    X_post = Xa + X_1                                # TL2 disconnected
+    X_pre = Xa + X_line                             
+    X_dur = Xa + X_1 + Xa * X_1 / (X_21 + X_22)      
+    X_post = Xa + X_1                               
     return X_pre, X_dur, X_post
 
 
@@ -191,7 +191,7 @@ ax3.set_title("Rotor angle, fault cleared after 200 ms")
 ax3.grid(alpha=0.3)
 ax3.legend()
 fig3.tight_layout()
-#fig3.savefig("rotor_angle_200ms.png", dpi=300)
+fig3.savefig("rotor_angle_200ms.png", dpi=300)
 
 # =====================================================================
 # 1.3.2  Critical clearing time (D = 0)
@@ -224,8 +224,6 @@ fig4.savefig("critical_clearing_time.png", dpi=300)
 
 # =====================================================================
 # 1.3.3  Ideal excitation system: |E_t| = 1 pu constant
-#        Constant voltage at the terminal -> X'd drops out of the transfer
-#        reactance; the angle is that of E_t.
 # =====================================================================
 Et_mag, theta0 = abs(E_t), np.angle(E_t)
 Pmax3_avr = tuple(Et_mag * E_B / X for X in transfer_reactances(X_tr))
